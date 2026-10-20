@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Экраны для батарей и корзины для кондиционеров — Вудирекс</title>
+<meta name="description" content="ООО «Вудирекс»: экраны для батарей из МДФ, массива дерева и металла, металлические корзины для кондиционеров, декоративные изделия.">
+<style>
+:root {
+  --bg: #faf8f5;
+  --surface: #ffffff;
+  --text: #2b2723;
+  --muted: #6a625a;
+  --line: #e6e0d8;
+  --accent: #a8672a;
+  --accent-dark: #85501d;
+  --accent-soft: #f3e7d9;
+  --radius: 12px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
+h1 { font-size: clamp(1.7rem, 5vw, 2.6rem); }
+h2 { font-size: clamp(1.35rem, 3.5vw, 1.8rem); }
+h3 { font-size: 1.1rem; }
+p { margin: 0 0 1em; }
+section { padding: 40px 0; }
+a { color: var(--accent-dark); }
+
+.btn {
+  display: inline-block; border: 0; cursor: pointer;
+  background: var(--accent); color: #fff; text-decoration: none;
+  padding: 12px 20px; border-radius: 8px; font: inherit; font-weight: 600;
+}
+.btn:hover { background: var(--accent-dark); }
+.btn.ghost { background: transparent; color: var(--accent-dark); border: 1px solid var(--accent); }
+.btn.ghost:hover { background: var(--accent-soft); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* шапка */
+header { background: var(--surface); border-bottom: 1px solid var(--line); }
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 12px 0; }
+.brand { font-weight: 800; font-size: 1.3rem; letter-spacing: .5px; color: var(--text); text-decoration: none; }
+.brand span { color: var(--accent); }
+.top-contacts { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.phone { font-weight: 600; color: var(--text); text-decoration: none; white-space: nowrap; }
+.icons { display: flex; gap: 8px; }
+.icons a {
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line);
+  display: grid; place-items: center; color: var(--accent-dark); background: var(--surface);
+}
+.icons a:hover { background: var(--accent-soft); }
+.icons svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* первый экран */
+.hero { padding: 36px 0 28px; }
+.hero p.lead { font-size: 1.1rem; color: var(--muted); max-width: 640px; }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0 28px; }
+.cards { display: grid; gap: 12px; grid-template-columns: 1fr; }
+.card {
+  text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px; display: flex; flex-direction: column; gap: 6px;
+}
+.card:hover { border-color: var(--accent); }
+.card[aria-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); background: #fffdfa; }
+.card strong { font-size: 1.05rem; }
+.card span { color: var(--muted); font-size: .95rem; }
+.card em { font-style: normal; color: var(--accent-dark); font-weight: 600; margin-top: 4px; }
+
+/* входы */
+.entries { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.entry-grid { display: grid; gap: 14px; grid-template-columns: 1fr; margin-top: 16px; }
+.entry { border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; background: var(--bg); display: flex; flex-direction: column; }
+.entry p { color: var(--muted); flex: 1; }
+.entry .btn { align-self: flex-start; }
+
+/* изделия */
+.panel[hidden] { display: none; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-top: 16px; scroll-margin-top: 12px; }
+.panel-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.tab {
+  font: inherit; cursor: pointer; padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--text);
+}
+.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.photos { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; align-content: start; }
+.ph {
+  aspect-ratio: 4 / 3; border-radius: 10px; border: 1px dashed #cdbfae;
+  background: repeating-linear-gradient(45deg, #f6efe6, #f6efe6 10px, #f1e8dc 10px, #f1e8dc 20px);
+  display: grid; place-items: center; text-align: center; color: var(--muted); font-size: .85rem; padding: 6px;
+}
+.ph:first-child { grid-column: 1 / -1; }
+.facts { padding-left: 1.1em; margin: 0 0 1em; color: var(--muted); }
+.facts li { margin-bottom: 4px; }
+
+/* как заказать */
+.steps { display: grid; gap: 12px; grid-template-columns: 1fr; counter-reset: s; margin-top: 16px; padding: 0; list-style: none; }
+.steps li { counter-increment: s; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 16px 16px 58px; position: relative; }
+.steps li::before {
+  content: counter(s); position: absolute; left: 16px; top: 14px; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent-dark); font-weight: 700; display: grid; place-items: center;
+}
+.steps b { display: block; }
+.steps span { color: var(--muted); font-size: .95rem; }
+
+/* контакты */
+.contact { background: var(--surface); border-top: 1px solid var(--line); }
+.contact-grid { display: grid; gap: 24px; grid-template-columns: 1fr; margin-top: 16px; }
+.contact-list { list-style: none; padding: 0; margin: 0 0 16px; }
+.contact-list li { margin-bottom: 8px; }
+form { display: grid; gap: 12px; }
+label { font-size: .9rem; font-weight: 600; display: grid; gap: 4px; }
+input, select, textarea {
+  font: inherit; padding: 10px 12px; border: 1px solid #cfc7bc; border-radius: 8px; background: #fff; color: var(--text); width: 100%;
+}
+.note { font-size: .85rem; color: var(--muted); }
+footer { padding: 20px 0 32px; color: var(--muted); font-size: .9rem; text-align: center; }
+
+@media (min-width: 720px) {
+  .cards, .entry-grid { grid-template-columns: repeat(3, 1fr); }
+  .steps { grid-template-columns: repeat(4, 1fr); }
+  .panel-grid { grid-template-columns: 1.1fr 1fr; }
+  .contact-grid { grid-template-columns: 1fr 1.2fr; }
+  .steps li { padding: 56px 14px 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap top">
+    <a class="brand" href="#top">WOODI<span>REX</span></a>
+    <div class="top-contacts">
+      <!-- ЗАМЕНИТЬ: рабочий телефон -->
+      <a class="phone" href="tel:+375000000000">+375 (__) ___-__-__</a>
+      <div class="icons" aria-label="Мессенджеры и соцсети">
+        <!-- ЗАМЕНИТЬ: ссылки на аккаунты -->
+        <a href="#" aria-label="Messenger" title="Messenger"><svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.2 2 11.4c0 2.9 1.4 5.5 3.6 7.2V22l3.3-1.8c1 .3 2 .4 3.1.4 5.5 0 10-4.2 10-9.4S17.500 2 12 2zm1 12.600-2.600-2.800-5 2.800 5.500-5.800 2.600 2.800 5-2.800-5.500 5.800z"/></svg></a>
+        <a href="#" aria-label="Telegram" title="Telegram"><svg viewBox="0 0 24 24"><path d="M21.900 4.300 18.700 19.500c-.2 1-.9 1.300-1.700.8l-4.800-3.600-2.300 2.300c-.3.300-.5.500-1 .5l.4-4.900 8.900-8c.4-.3-.1-.5-.6-.2L6.600 13l-4.700-1.500c-1-.3-1-1 .2-1.500L20.400 3c.9-.3 1.600.2 1.500 1.300z"/></svg></a>
+        <a href="#" aria-label="Viber" title="Viber"><svg viewBox="0 0 24 24"><path d="M12.100 2C7.300 2 4 2.800 2.800 7.200c-.7 2.700-.7 5.800.4 8.400.5 1.200 1.500 2 2.600 2.300V22l3.200-3.100c.7.100 1.400.1 2.100.1 4.800 0 8.100-.8 9.300-5.200.7-2.700.7-5.800-.4-8.400C18.600 3 17 2 12.100 2zm3.600 14.100c-.4.600-1.300 1-2 .8-3.300-1-5.500-3.100-6.800-6-.3-.7 0-1.500.5-1.900l.7-.5c.3-.2.700-.1.900.2l.8 1.300c.1.300.1.600-.2.800l-.4.400c.7 1.400 1.700 2.400 3.100 3.100l.5-.5c.2-.2.600-.3.800-.1l1.300.8c.4.200.4.600.2 1z"/></svg></a>
+        <a href="#" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24"><path d="M7.800 2h8.400A5.800 5.800 0 0 1 22 7.800v8.400a5.800 5.800 0 0 1-5.800 5.800H7.800A5.800 5.800 0 0 1 2 16.200V7.800A5.800 5.800 0 0 1 7.800 2zm-.2 2A3.600 3.600 0 0 0 4 7.600v8.800A3.600 3.600 0 0 0 7.600 20h8.800a3.600 3.600 0 0 0 3.600-3.600V7.600A3.600 3.600 0 0 0 16.400 4H7.600zM17.300 5.500a1.200 1.200 0 1 1 0 2.400 1.200 1.200 0 0 1 0-2.400zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Экраны для батарей и корзины для кондиционеров</h1>
+    <p class="lead">Производим изделия из МДФ, массива дерева и металла для ремонта, строительных проектов и объектов, где экраны нужны по требованию. Выберите изделие и оставьте заявку любым удобным способом.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#contact">Оставить заявку</a>
+      <a class="btn ghost" href="#products">Смотреть изделия</a>
+    </div>
+
+    <div class="cards" role="tablist" aria-label="Изделия">
+      <button class="card" role="tab" aria-selected="true" aria-controls="p-screens" data-panel="p-screens">
+        <strong>Экраны для батарей</strong>
+        <span>МДФ, массив дерева, металл</span>
+        <em>Смотреть →</em>
+      </button>
+      <button class="card" role="tab" aria-selected="false" aria-controls="p-baskets" data-panel="p-baskets">
+        <strong>Корзины для кондиционеров</strong>
+        <span>Металлические, под размер блока</span>
+        <em>Смотреть →</em>
+      </button>
+      <button class="card" role="tab" aria-selected="false" aria-controls="p-decor" data-panel="p-decor">
+        <strong>Декоративные изделия</strong>
+        <span>Элементы дизайна для интерьера</span>
+        <em>Смотреть →</em>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="entries">
+  <div class="wrap">
+    <h2>Выберите свою ситуацию</h2>
+    <div class="entry-grid">
+      <div class="entry">
+        <h3>Для ремонта</h3>
+        <p>Квартира, дом или офис: нужно закрыть старые батареи и сделать комнату аккуратнее.</p>
+        <button class="btn" data-ask="Ремонт: квартира, дом, офис">Оставить заявку</button>
+      </div>
+      <div class="entry">
+        <h3>Для проекта и тендера</h3>
+        <p>Экраны указаны в проектной документации. Пришлём расчёт и коммерческое предложение, чтобы вы могли сравнить варианты.</p>
+        <button class="btn" data-ask="Проект и тендер: запрос расчёта и КП">Запросить расчёт и КП</button>
+      </div>
+      <div class="entry">
+        <h3>По требованию закона</h3>
+        <p>В старом здании нужно установить экраны. Расскажите об объекте, подберём подходящие изделия.</p>
+        <button class="btn" data-ask="Объект с требованием по установке экранов">Оставить заявку</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="wrap">
+    <h2>Изделия</h2>
+
+    <div class="panel" id="p-screens" role="tabpanel">
+      <h3>Экраны для батарей</h3>
+      <div class="tabs" role="tablist" aria-label="Материал">
+        <button class="tab" role="tab" aria-selected="true" data-mat="mdf">МДФ</button>
+        <button class="tab" role="tab" aria-selected="false" data-mat="wood">Массив дерева</button>
+        <button class="tab" role="tab" aria-selected="false" data-mat="metal">Металл</button>
+      </div>
+      <div class="panel-grid">
+        <div class="photos">
+          <div class="ph">Место для фото<br>экрана</div>
+          <div class="ph">Фото 2</div>
+          <div class="ph">Фото 3</div>
+        </div>
+        <div>
+          <div data-mat-text="mdf">
+            <h3>Экран из МДФ</h3>
+            <p>Закрывает батарею и украшает комнату. Подходит для квартир, домов и офисов.</p>
+            <ul class="facts"><li>Размер делаем под вашу батарею</li><li>Цвет и рисунок решётки согласуем</li></ul>
+          </div>
+          <div data-mat-text="wood" hidden>
+            <h3>Экран из массива дерева</h3>
+            <p>Натуральное дерево для интерьеров, где важен материал.</p>
+            <ul class="facts"><li>Размер делаем под вашу батарею</li><li>Породу и отделку согласуем</li></ul>
+          </div>
+          <div data-mat-text="metal" hidden>
+            <h3>Металлический экран</h3>
+            <p>Прочное решение для офисов, общественных и технических помещений.</p>
+            <ul class="facts"><li>Размер делаем под вашу батарею</li><li>Цвет покрытия согласуем</li></ul>
+          </div>
+          <button class="btn" data-ask="Экраны для батарей">Заказать экран</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="p-baskets" role="tabpanel" hidden>
+      <h3>Корзины для кондиционеров</h3>
+      <div class="panel-grid">
+        <div class="photos">
+          <div class="ph">Место для фото<br>корзины</div>
+          <div class="ph">Фото 2</div>
+          <div class="ph">Фото 3</div>
+        </div>
+        <div>
+          <p>Металлическая корзина защищает наружный блок кондиционера и закрывает его от глаз.</p>
+          <ul class="facts"><li>Из металла</li><li>Размер делаем под ваш блок</li></ul>
+          <button class="btn" data-ask="Корзины для кондиционеров">Заказать корзину</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="p-decor" role="tabpanel" hidden>
+      <h3>Декоративные изделия</h3>
+      <div class="panel-grid">
+        <div class="photos">
+          <div class="ph">Место для фото<br>изделия</div>
+          <div class="ph">Фото 2</div>
+          <div class="ph">Фото 3</div>
+        </div>
+        <div>
+          <p>Декоративные панели и элементы дизайна для интерьера. Список изделий скоро появится здесь.</p>
+          <p>Расскажите, что вам нужно, и мы подскажем, можем ли сделать.</p>
+          <button class="btn" data-ask="Декоративные изделия">Обсудить изделие</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="entries">
+  <div class="wrap">
+    <h2>Как заказать</h2>
+    <ol class="steps">
+      <li><b>Заявка</b><span>Позвоните, напишите или заполните форму.</span></li>
+      <li><b>Размеры</b><span>Уточняем размеры и материал.</span></li>
+      <li><b>Расчёт</b><span>Отправляем стоимость и предложение.</span></li>
+      <li><b>Изготовление</b><span>Делаем изделие и согласуем доставку или монтаж.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2>Оставить заявку</h2>
+    <div class="contact-grid">
+      <div>
+        <ul class="contact-list">
+          <li>Телефон: <a href="tel:+375000000000">+375 (__) ___-__-__</a></li>
+          <li>E-mail: <a href="mailto:woodirex@gmail.com">woodirex@gmail.com</a></li>
+          <li>Мессенджеры: Messenger, Telegram, Viber (иконки вверху страницы)</li>
+        </ul>
+        <p class="note">ООО «Вудирекс»</p>
+      </div>
+      <form id="form">
+        <label>Имя
+          <input name="name" autocomplete="name" required>
+        </label>
+        <label>Телефон или e-mail
+          <input name="contact" autocomplete="tel" required>
+        </label>
+        <label>Что интересует
+          <select name="item">
+            <option>Экраны для батарей</option>
+            <option>Корзины для кондиционеров</option>
+            <option>Декоративные изделия</option>
+            <option>Проект и тендер: запрос расчёта и КП</option>
+            <option>Ремонт: квартира, дом, офис</option>
+            <option>Объект с требованием по установке экранов</option>
+            <option>Другое</option>
+          </select>
+        </label>
+        <label>Сообщение
+          <textarea name="msg" rows="4" placeholder="Размеры, материал, адрес объекта"></textarea>
+        </label>
+        <button class="btn" type="submit">Отправить заявку</button>
+        <p class="note">Кнопка откроет письмо в вашей почтовой программе с уже заполненными данными.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">© ООО «Вудирекс»</div>
+</footer>
+
+<script>
+(function () {
+  var cards = document.querySelectorAll('.card');
+  var panels = document.querySelectorAll('.panel');
+  var form = document.getElementById('form');
+
+  function showPanel(id, scroll) {
+    panels.forEach(function (p) { p.hidden = p.id !== id; });
+    cards.forEach(function (c) {
+      c.setAttribute('aria-selected', String(c.dataset.panel === id));
+    });
+    if (scroll) document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  cards.forEach(function (c) {
+    c.addEventListener('click', function () { showPanel(c.dataset.panel, true); });
+  });
+
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.setAttribute('aria-selected', String(x === t)); });
+      document.querySelectorAll('[data-mat-text]').forEach(function (b) {
+        b.hidden = b.dataset.matText !== t.dataset.mat;
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-ask]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var opt = Array.prototype.find.call(form.item.options, function (o) { return o.text === b.dataset.ask; });
+      if (opt) form.item.value = opt.value;
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var body = 'Имя: ' + form.name.value + '\nКонтакт: ' + form.contact.value +
+      '\nИнтересует: ' + form.item.value + '\n\n' + form.msg.value;
+    location.href = 'mailto:woodirex@gmail.com?subject=' +
+      encodeURIComponent('Заявка с сайта: ' + form.item.value) +
+      '&body=' + encodeURIComponent(body);
+  });
+})();
+</script>
+</body>
+</html>
