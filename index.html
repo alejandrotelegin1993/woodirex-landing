@@ -141,7 +141,6 @@ footer { padding: 20px 0 32px; color: var(--muted); font-size: .9rem; text-align
 }
 .choice input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; }
 .choice input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
-.coating { margin: 8px 0 0; font-size: .9rem; color: var(--muted); }
 .sizes { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .sizes input { min-height: 44px; }
 .calc .note { margin: 8px 0 0; }
@@ -218,7 +217,6 @@ footer { padding: 20px 0 32px; color: var(--muted); font-size: .9rem; text-align
         <fieldset>
           <legend>Материал экрана</legend>
           <div class="choice" id="calc-materials"></div>
-          <p class="coating" id="calc-coating" hidden></p>
         </fieldset>
         <fieldset>
           <legend>Размер экрана в миллиметрах</legend>
@@ -404,7 +402,7 @@ var CALC_SETTINGS = {
   materials: [
     { id: 'mdf',   label: 'МДФ',           ratePerMeter: 160 },
     { id: 'metal', label: 'Металл',        ratePerMeter: 180 },
-    { id: 'wood',  label: 'Массив дерева', ratePerMeter: 190, coating: { label: 'Лак', price: 20 } }
+    { id: 'wood',  label: 'Массив дерева', ratePerMeter: 190 }
   ],
   limitsMm: { length: 1500, height: 650, depth: 250 },
   minLengthMm: 800,
@@ -425,7 +423,7 @@ function calcScreenPrice(input, settings) {
 
   var calcLengthMm = Math.max(Math.ceil(l), settings.minLengthMm);
   var kopecks = calcLengthMm * material.ratePerMeter / 10; // мм × BYN/м → копейки
-  var withoutVat = ceilDiv(kopecks, 100) + (material.coating ? material.coating.price : 0);
+  var withoutVat = ceilDiv(kopecks, 100);
   var withVat = ceilDiv(withoutVat * (100 + settings.vatPercent), 100);
   return { status: 'ok', withoutVat: withoutVat, withVat: withVat, raisedToMin: l < settings.minLengthMm };
 }
@@ -433,7 +431,6 @@ function calcScreenPrice(input, settings) {
 (function () {
   var S = CALC_SETTINGS;
   var form = document.getElementById('calc-form');
-  var coating = document.getElementById('calc-coating');
   var price = document.getElementById('calc-price');
   var priceSub = document.getElementById('calc-price-sub');
   var minText = 'Экран короче ' + S.minLengthMm + ' мм считается как ' + S.minLengthMm + ' мм.';
@@ -456,9 +453,6 @@ function calcScreenPrice(input, settings) {
 
   function update() {
     var material = S.materials.filter(function (m) { return m.id === form.material.value; })[0];
-    coating.hidden = !material.coating;
-    if (material.coating) coating.textContent = 'Покрытие: ' + material.coating.label.toLowerCase() + ', уже в цене.';
-
     var r = calcScreenPrice({
       material: material.id,
       lengthMm: readMm(form.len),
