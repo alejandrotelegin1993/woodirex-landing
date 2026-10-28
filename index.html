@@ -147,6 +147,8 @@ footer { padding: 20px 0 32px; color: var(--muted); font-size: .9rem; text-align
 .calc-result { background: var(--accent-soft); border-radius: 10px; padding: 16px; }
 .price-main { font-size: 1.6rem; font-weight: 800; margin: 0; }
 .price-sub { margin: 0; color: var(--muted); }
+.calc-send { margin-top: 14px; min-height: 44px; }
+.calc-send:disabled { opacity: .5; cursor: not-allowed; background: var(--accent); }
 
 @media (min-width: 720px) {
   .calc-box { grid-template-columns: 1.1fr 1fr; align-items: start; }
@@ -238,6 +240,7 @@ footer { padding: 20px 0 32px; color: var(--muted); font-size: .9rem; text-align
         <p class="price-main" id="calc-price"></p>
         <p class="price-sub" id="calc-price-sub"></p>
         <p class="note">Все экраны изготавливаются под заказ</p>
+        <button class="btn calc-send" type="button" id="calc-send">Отправить расчёт</button>
       </div>
     </form>
   </div>
@@ -428,6 +431,47 @@ function calcScreenPrice(input, settings) {
   return { status: 'ok', withoutVat: withoutVat, withVat: withVat, raisedToMin: l < settings.minLengthMm };
 }
 
+var CALC_BLOCK_START = 'Расчёт с калькулятора:';
+var CALC_BLOCK_END = 'Источник: калькулятор';
+
+// Текст заявки из результата расчёта: один для почты, копирования и Viber.
+// Текст есть только у расчёта с ценой или «индивидуально», остальное не отправляем.
+function calcRequestText(input, result, settings) {
+  if (result.status !== 'ok' && result.status !== 'oversize') return '';
+  var material = settings.materials.filter(function (m) { return m.id === input.material; })[0];
+  var lines = [
+    CALC_BLOCK_START,
+    'Изделие: экран для батареи',
+    'Материал: ' + material.label,
+    'Размер (Д×В×Г): ' + input.lengthMm + '×' + input.heightMm + '×' + input.depthMm + ' мм'
+  ];
+  if (result.status === 'ok') {
+    lines.push('Расчёт: стандартный размер, по погонному метру');
+    if (result.raisedToMin) lines.push('Длина посчитана как ' + settings.minLengthMm + ' мм');
+    lines.push('Цена: от ' + result.withVat + ' BYN с НДС, ' + result.withoutVat + ' BYN без НДС');
+  } else {
+    lines.push('Расчёт: нестандартный размер');
+    lines.push('Цена: считаем индивидуально');
+  }
+  lines.push(CALC_BLOCK_END);
+  return lines.join('\n');
+}
+
+// Вставляет блок расчёта в сообщение: текст человека не трогает,
+// прежний блок расчёта заменяет, а не дублирует.
+function mergeCalcBlock(message, block) {
+  // Ищем последний блок: свой текст человека стоит перед ним.
+  var start = message.lastIndexOf(CALC_BLOCK_START);
+  if (start >= 0) {
+    var end = message.indexOf(CALC_BLOCK_END, start);
+    // Последнюю строку блока стёрли руками: заменяем до конца сообщения.
+    var tail = end < 0 ? '' : message.slice(end + CALC_BLOCK_END.length);
+    return message.slice(0, start) + block + tail;
+  }
+  var userText = message.replace(/\s+$/, '');
+  return userText ? userText + '\n\n' + block : block;
+}
+
 (function () {
   var S = CALC_SETTINGS;
   var form = document.getElementById('calc-form');
@@ -451,14 +495,19 @@ function calcScreenPrice(input, settings) {
     return /^\d+(\.\d+)?$/.test(v) ? Number(v) : NaN;
   }
 
+  var send = document.getElementById('calc-send');
+  var requestText = '';
+
   function update() {
-    var material = S.materials.filter(function (m) { return m.id === form.material.value; })[0];
-    var r = calcScreenPrice({
-      material: material.id,
+    var input = {
+      material: form.material.value,
       lengthMm: readMm(form.len),
       heightMm: readMm(form.height),
       depthMm: readMm(form.depth)
-    }, S);
+    };
+    var r = calcScreenPrice(input, S);
+    requestText = calcRequestText(input, r, S);
+    send.disabled = !requestText;
 
     if (r.status === 'ok') {
       price.textContent = 'от ' + r.withVat + ' BYN с НДС';
@@ -475,6 +524,13 @@ function calcScreenPrice(input, settings) {
   form.addEventListener('input', update);
   form.addEventListener('change', update);
   form.addEventListener('submit', function (e) { e.preventDefault(); });
+  send.addEventListener('click', function () {
+    if (!requestText) return;
+    var lead = document.getElementById('form');
+    lead.item.value = 'Экраны для батарей';
+    lead.msg.value = mergeCalcBlock(lead.msg.value, requestText);
+    lead.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
   update();
 })();
 
