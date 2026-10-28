@@ -401,14 +401,17 @@ footer { padding: 20px 0 32px; color: var(--muted); font-size: .9rem; text-align
 
 <script>
 // Настройки калькулятора: все цифры только здесь. Ставки в BYN без НДС.
+// ratePerSqMeter: ставка за м² для экранов выше limitsMm.height; null → «считаем индивидуально».
 var CALC_SETTINGS = {
   materials: [
-    { id: 'mdf',   label: 'МДФ',           ratePerMeter: 160 },
-    { id: 'metal', label: 'Металл',        ratePerMeter: 180 },
-    { id: 'wood',  label: 'Массив дерева', ratePerMeter: 190 }
+    { id: 'mdf',   label: 'МДФ',           ratePerMeter: 160, ratePerSqMeter: null },
+    { id: 'metal', label: 'Металл',        ratePerMeter: 180, ratePerSqMeter: null },
+    { id: 'wood',  label: 'Массив дерева', ratePerMeter: 190, ratePerSqMeter: null }
   ],
   limitsMm: { length: 1500, height: 650, depth: 250 },
+  maxLengthPerMeterMm: 2000, // длиннее limitsMm.length и до этой длины: по п. м, возможно две секции
   minLengthMm: 800,
+  centimetersBelowMm: { length: 300, height: 150 }, // меньше этого похоже на ввод в сантиметрах
   vatPercent: 20
 };
 
@@ -421,18 +424,38 @@ function calcScreenPrice(input, settings) {
   var valid = [l, h, d].every(function (v) { return typeof v === 'number' && isFinite(v) && v > 0; });
   if (!material || !valid) return { status: 'empty' };
 
+  var cm = settings.centimetersBelowMm;
+  if (l < cm.length || h < cm.height) return { status: 'centimeters' };
+
+  // Правила по порядку, срабатывает первое; границы включительно.
   var lim = settings.limitsMm;
-  if (l > lim.length || h > lim.height || d > lim.depth) return { status: 'oversize' };
+  if (d > lim.depth) return { status: 'oversize', reason: 'depth' };
+  if (l > settings.maxLengthPerMeterMm) return { status: 'oversize', reason: 'length' };
+  function priced(basis, withoutVat, extra) {
+    var r = { status: 'ok', basis: basis, withoutVat: withoutVat,
+      withVat: ceilDiv(withoutVat * (100 + settings.vatPercent), 100),
+      raisedToMin: false, longScreen: false };
+    for (var k in extra) r[k] = extra[k];
+    return r;
+  }
+
+  if (h > lim.height) {
+    // Площадь фасада: длина × высота, без минимальной длины.
+    var rateSq = material.ratePerSqMeter;
+    if (!(rateSq > 0)) return { status: 'oversize', basis: 'area' };
+    return priced('area', ceilDiv(Math.ceil(l) * Math.ceil(h) * rateSq, 1000000)); // мм² × BYN/м² → BYN
+  }
 
   var calcLengthMm = Math.max(Math.ceil(l), settings.minLengthMm);
   var kopecks = calcLengthMm * material.ratePerMeter / 10; // мм × BYN/м → копейки
-  var withoutVat = ceilDiv(kopecks, 100);
-  var withVat = ceilDiv(withoutVat * (100 + settings.vatPercent), 100);
-  return { status: 'ok', withoutVat: withoutVat, withVat: withVat, raisedToMin: l < settings.minLengthMm };
+  return priced('meter', ceilDiv(kopecks, 100), {
+    raisedToMin: l < settings.minLengthMm, longScreen: l > lim.length
+  });
 }
 
 var CALC_BLOCK_START = 'Расчёт с калькулятора:';
 var CALC_BLOCK_END = 'Источник: калькулятор';
+var CALC_LONG_SCREEN_NOTE = 'Длинный экран, возможно из двух секций, уточним';
 
 // Текст заявки из результата расчёта: один для почты, копирования и Viber.
 // Текст есть только у расчёта с ценой или «индивидуально», остальное не отправляем.
@@ -445,14 +468,15 @@ function calcRequestText(input, result, settings) {
     'Материал: ' + material.label,
     'Размер (Д×В×Г): ' + input.lengthMm + '×' + input.heightMm + '×' + input.depthMm + ' мм'
   ];
-  if (result.status === 'ok') {
-    lines.push('Расчёт: стандартный размер, по погонному метру');
-    if (result.raisedToMin) lines.push('Длина посчитана как ' + settings.minLengthMm + ' мм');
-    lines.push('Цена: от ' + result.withVat + ' BYN с НДС, ' + result.withoutVat + ' BYN без НДС');
-  } else {
-    lines.push('Расчёт: нестандартный размер');
-    lines.push('Цена: считаем индивидуально');
-  }
+  if (result.reason === 'depth') lines.push('Расчёт: глубина больше ' + settings.limitsMm.depth + ' мм');
+  else if (result.reason === 'length') lines.push('Расчёт: длина больше ' + settings.maxLengthPerMeterMm + ' мм');
+  else if (result.basis === 'area') lines.push('Расчёт: габаритный экран, по квадратному метру');
+  else if (result.longScreen) lines.push('Расчёт: длинный экран, по погонному метру', CALC_LONG_SCREEN_NOTE);
+  else lines.push('Расчёт: стандартный размер, по погонному метру');
+  if (result.raisedToMin) lines.push('Длина посчитана как ' + settings.minLengthMm + ' мм');
+  lines.push(result.status === 'ok'
+    ? 'Цена: от ' + result.withVat + ' BYN с НДС, ' + result.withoutVat + ' BYN без НДС'
+    : 'Цена: считаем индивидуально');
   lines.push(CALC_BLOCK_END);
   return lines.join('\n');
 }
@@ -511,10 +535,16 @@ function mergeCalcBlock(message, block) {
 
     if (r.status === 'ok') {
       price.textContent = 'от ' + r.withVat + ' BYN с НДС';
-      priceSub.textContent = r.withoutVat + ' BYN без НДС' + (r.raisedToMin ? '. ' + minText : '');
+      priceSub.textContent = r.withoutVat + ' BYN без НДС' +
+        (r.basis === 'area' ? '. Габаритный экран, посчитан по площади.' : '') +
+        (r.longScreen ? '. ' + CALC_LONG_SCREEN_NOTE + '.' : '') +
+        (r.raisedToMin ? '. ' + minText : '');
     } else if (r.status === 'oversize') {
-      price.textContent = 'Нестандартный размер';
-      priceSub.textContent = 'Рассчитаем стоимость по заявке.';
+      price.textContent = 'Считаем индивидуально';
+      priceSub.textContent = 'Отправьте размеры, рассчитаем стоимость по заявке.';
+    } else if (r.status === 'centimeters') {
+      price.textContent = 'Похоже, размер в сантиметрах?';
+      priceSub.textContent = 'Введите размеры в миллиметрах.';
     } else {
       price.textContent = 'Цена появится здесь';
       priceSub.textContent = 'Введите длину, высоту и глубину экрана.';
