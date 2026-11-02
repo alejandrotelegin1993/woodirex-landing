@@ -94,6 +94,49 @@ function mergeCalcBlock(message, block) {
   return userText ? userText + '\n\n' + block : block;
 }
 
+// Число миллиметров из поля: пробелы убираем, запятая как точка; не число → NaN.
+function readMm(field) {
+  var v = field.value.replace(/\s/g, '').replace(',', '.');
+  return /^\d+(\.\d+)?$/.test(v) ? Number(v) : NaN;
+}
+
+// Корзины: одна цена «от», покраска и замер входят. Ставка в BYN без НДС.
+var BASKET_SETTINGS = {
+  fromWithoutVat: 250,
+  versions: [
+    { id: 'protect',    label: 'защитная' },
+    { id: 'antivandal', label: 'антивандальная с крышкой', priceOnRequest: true }
+  ],
+  vatPercent: CALC_SETTINGS.vatPercent
+};
+
+function basketPrice(settings) {
+  var withoutVat = settings.fromWithoutVat;
+  return { withoutVat: withoutVat, withVat: Math.ceil(withoutVat * (100 + settings.vatPercent) / 100) };
+}
+
+// Текст заявки на корзину. Пустой, если нет ни размеров блока, ни модели, ни замера.
+function basketRequestText(input, settings) {
+  var sizes = [input.lengthMm, input.depthMm, input.heightMm];
+  var hasSizes = sizes.every(function (v) { return typeof v === 'number' && isFinite(v) && v > 0; });
+  var model = input.model.trim();
+  if (!hasSizes && !model && !input.measure) return '';
+  var version = settings.versions.filter(function (v) { return v.id === input.version; })[0] || settings.versions[0];
+  var ral = input.ral.trim();
+  var p = basketPrice(settings);
+  var lines = [CALC_BLOCK_START, 'Изделие: корзина для кондиционера'];
+  if (hasSizes) lines.push('Размер блока (Д×Г×В): ' + sizes.join('×') + ' мм');
+  if (model) lines.push('Модель кондиционера: ' + model);
+  if (input.measure) lines.push('Нужен замер');
+  lines.push(
+    'Исполнение: ' + version.label + (version.priceOnRequest ? ', стоимость уточним' : ''),
+    'Цвет: ' + (!ral ? 'подберём под фасад' : /^\d/.test(ral) ? 'RAL ' + ral : ral),
+    'Цена: от ' + p.withVat + ' BYN с НДС, ' + p.withoutVat + ' BYN без НДС',
+    CALC_BLOCK_END
+  );
+  return lines.join('\n');
+}
+
 (function () {
   var S = CALC_SETTINGS;
   var form = document.getElementById('calc-form');
@@ -116,11 +159,6 @@ function mergeCalcBlock(message, block) {
     document.getElementById('calc-materials').appendChild(label);
   });
   document.getElementById('calc-min-note').textContent = minText;
-
-  function readMm(field) {
-    var v = field.value.replace(/\s/g, '').replace(',', '.');
-    return /^\d+(\.\d+)?$/.test(v) ? Number(v) : NaN;
-  }
 
   var send = document.getElementById('calc-send');
   var requestText = '';
@@ -161,6 +199,46 @@ function mergeCalcBlock(message, block) {
     if (!requestText) return;
     var lead = document.getElementById('form');
     lead.item.value = 'Экраны для батарей';
+    lead.msg.value = mergeCalcBlock(lead.msg.value, requestText);
+    lead.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  update();
+})();
+
+(function () {
+  var S = BASKET_SETTINGS;
+  var form = document.getElementById('basket-form');
+  if (!form) return; // страница без расчёта корзины
+  var p = basketPrice(S);
+  var priceSub = document.getElementById('basket-price-sub');
+  var send = document.getElementById('basket-send');
+  var requestText = '';
+  document.getElementById('basket-price').textContent = 'от ' + p.withVat + ' BYN с НДС';
+
+  function update() {
+    var input = {
+      lengthMm: readMm(form.len),
+      depthMm: readMm(form.depth),
+      heightMm: readMm(form.height),
+      model: form.model.value,
+      measure: form.measure.checked,
+      version: form.version.value,
+      ral: form.ral.value
+    };
+    var version = S.versions.filter(function (v) { return v.id === input.version; })[0];
+    requestText = basketRequestText(input, S);
+    send.disabled = !requestText;
+    priceSub.textContent = p.withoutVat + ' BYN без НДС' +
+      (version && version.priceOnRequest ? '. Антивандальное исполнение — стоимость уточним.' : '');
+  }
+
+  form.addEventListener('input', update);
+  form.addEventListener('change', update);
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+  send.addEventListener('click', function () {
+    if (!requestText) return;
+    var lead = document.getElementById('form');
+    lead.item.value = 'Корзины для кондиционеров';
     lead.msg.value = mergeCalcBlock(lead.msg.value, requestText);
     lead.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });

@@ -114,7 +114,6 @@ header { background: var(--surface); border-bottom: 1px solid var(--line); }
 .reqs li { margin-bottom: 12px; }
 
 /* изделия */
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-top: 16px; scroll-margin-top: 12px; }
 .panel-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
 .photos { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; align-content: start; }
 .ph {
@@ -191,6 +190,9 @@ footer { padding: 24px 0 32px; color: var(--muted); font-size: .9rem; border-top
 .sizes { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .sizes input { min-height: 44px; }
 .calc .note { margin: 8px 0 0; }
+.calc .field, .calc .check { margin-top: 16px; }
+.check { display: flex; gap: 10px; align-items: center; font-weight: 400; min-height: 44px; }
+.check input { width: 22px; height: 22px; margin: 0; }
 .calc-result { background: var(--accent-soft); border-radius: 10px; padding: 16px; }
 .price-main { font-size: 1.6rem; font-weight: 800; margin: 0; }
 .price-sub { margin: 0; color: var(--muted); }
