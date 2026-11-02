@@ -109,6 +109,21 @@ header { background: var(--surface); border-bottom: 1px solid var(--line); }
 .entry p { color: var(--muted); flex: 1; }
 .entry .btn { align-self: flex-start; }
 
+/* карточки-ссылки хабов */
+.tiles { display: grid; gap: 14px; grid-template-columns: 1fr; margin-top: 16px; }
+.tile {
+  display: flex; flex-direction: column; gap: 6px; padding: 18px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  color: inherit; text-decoration: none;
+}
+.entries .tile { background: var(--bg); }
+.tile:hover { border-color: var(--accent); }
+.tile strong { font-size: 1.05rem; }
+.tile span { color: var(--muted); font-size: .95rem; flex: 1; }
+.tile em { font-style: normal; color: var(--accent-dark); font-weight: 600; margin-top: 4px; }
+.reqs { color: var(--text); max-width: 760px; }
+.reqs li { margin-bottom: 12px; }
+
 /* изделия */
 .panel[hidden] { display: none; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-top: 16px; scroll-margin-top: 12px; }
@@ -197,7 +212,8 @@ footer { padding: 24px 0 32px; color: var(--muted); font-size: .9rem; border-top
 
 @media (min-width: 720px) {
   .calc-box { grid-template-columns: 1.1fr 1fr; align-items: start; }
-  .cards, .entry-grid { grid-template-columns: repeat(3, 1fr); }
+  .cards, .entry-grid, .tiles { grid-template-columns: repeat(3, 1fr); }
+  .tiles-2 { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(4, 1fr); }
   .panel-grid { grid-template-columns: 1.1fr 1fr; }
   .contact-grid { grid-template-columns: 1fr 1.2fr; }
