@@ -44,8 +44,61 @@
   });
 })();
 
+// Плашка cookies: выбор хранится в браузере, сторонние скрипты — только после «Принять».
+(function () {
+  var KEY = 'woodirex-cookies';
+
+  // Счётчики (GA4, Google Ads, Метрика — задача #20) добавлять функциями в этот список.
+  // Пока он пуст, cookies сайт не ставит и плашку не показывает. Вместе со счётчиками
+  // вернуть в politika.html раздел о cookies и кнопку #cookie-reset.
+  var counters = [];
+  if (!counters.length) return;
+  function loadCounters() { counters.forEach(function (load) { load(); }); }
+
+  function read() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+  function save(v) {
+    try { localStorage.setItem(KEY, v); } catch (e) { /* без хранилища плашка покажется снова */ }
+  }
+
+  function show() {
+    if (document.getElementById('cookie-bar')) return;
+    var bar = document.createElement('div');
+    bar.id = 'cookie-bar';
+    bar.className = 'cookie-bar';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Согласие на cookies');
+    bar.innerHTML = '<p>Cookies для статистики посещений. ' +
+      '<a href="politika.html#cookies">Подробнее</a></p>' +
+      '<div class="cookie-btns"><button class="btn" type="button" data-v="accepted">Принять</button>' +
+      '<button class="btn ghost" type="button" data-v="declined">Отказаться</button></div>';
+    document.body.appendChild(bar);
+    // Отступ снизу, чтобы плашка не закрывала конец страницы: форму, кнопки, подвал.
+    document.body.style.paddingBottom = bar.offsetHeight + 'px';
+    bar.addEventListener('click', function (e) {
+      var v = e.target.getAttribute('data-v');
+      if (!v) return;
+      var wasAccepted = read() === 'accepted';
+      save(v);
+      bar.remove();
+      document.body.style.paddingBottom = '';
+      if (v === 'accepted') loadCounters();
+      else if (wasAccepted) location.reload(); // уже загруженные счётчики выгружаем перезагрузкой
+    });
+  }
+
+  var choice = read();
+  if (choice === 'accepted') loadCounters();
+  else if (choice !== 'declined') show();
+
+  var reset = document.getElementById('cookie-reset');
+  if (reset) reset.addEventListener('click', show);
+})();
+
 (function () {
   var form = document.getElementById('form');
+  if (!form) return;
 
   document.querySelectorAll('[data-ask]').forEach(function (b) {
     b.addEventListener('click', function () {

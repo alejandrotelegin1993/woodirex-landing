@@ -172,6 +172,24 @@ footer { padding: 24px 0 32px; color: var(--muted); font-size: .9rem; border-top
 .foot { display: grid; gap: 14px; grid-template-columns: 1fr; }
 .foot b { color: var(--text); }
 
+/* политика ПДн */
+.draft { display: inline-block; padding: 6px 12px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-dark); font-weight: 600; }
+.legal { max-width: 760px; }
+.legal h2 { font-size: 1.2rem; margin-top: 1.6em; scroll-margin-top: 12px; }
+.legal h2:first-child { margin-top: 0; }
+.legal .facts { color: var(--text); }
+
+/* плашка cookies */
+.cookie-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
+  padding: 10px 16px; background: var(--surface); border-top: 1px solid var(--line);
+  box-shadow: 0 -6px 20px rgba(43, 39, 35, .08); font-size: .9rem;
+}
+.cookie-bar p { margin: 0; }
+.cookie-btns { display: flex; gap: 8px; }
+.cookie-btns .btn { padding: 8px 16px; min-height: 40px; }
+
 /* калькулятор */
 .calc { scroll-margin-top: 12px; }
 .calc-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 18px; grid-template-columns: 1fr; }
