@@ -76,63 +76,9 @@
     <h1>Экраны для батарей и корзины для кондиционеров</h1>
     <p class="lead">Производим изделия из МДФ, массива дерева и металла для ремонта, строительных проектов и объектов, где экраны нужны по требованию. Выберите изделие и оставьте заявку любым удобным способом.</p>
     <div class="hero-cta">
-      <a class="btn" href="#contact">Оставить заявку</a>
-      <a class="btn ghost" href="#calc">Рассчитать стоимость</a>
-      <a class="btn ghost" href="#products">Смотреть изделия</a>
+      <a class="btn" href="ekrany.html">Выбрать экран</a>
+      <a class="btn ghost" href="#contact">Оставить заявку</a>
     </div>
-
-    <div class="cards" role="tablist" aria-label="Изделия">
-      <button class="card" role="tab" aria-selected="true" aria-controls="p-screens" data-panel="p-screens">
-        <strong>Экраны для батарей</strong>
-        <span>МДФ, массив дерева, металл</span>
-        <em>Смотреть →</em>
-      </button>
-      <button class="card" role="tab" aria-selected="false" aria-controls="p-baskets" data-panel="p-baskets">
-        <strong>Корзины для кондиционеров</strong>
-        <span>Металлические, под размер блока</span>
-        <em>Смотреть →</em>
-      </button>
-      <button class="card" role="tab" aria-selected="false" aria-controls="p-decor" data-panel="p-decor">
-        <strong>Декоративные изделия</strong>
-        <span>Элементы дизайна для интерьера</span>
-        <em>Смотреть →</em>
-      </button>
-    </div>
-  </div>
-</section>
-
-<section class="calc" id="calc" data-material="mdf">
-  <div class="wrap">
-    <h2>Рассчитать стоимость изделия</h2>
-    <form class="calc-box" id="calc-form" novalidate>
-      <div>
-        <fieldset>
-          <legend>Материал экрана</legend>
-          <div class="choice" id="calc-materials"></div>
-        </fieldset>
-        <fieldset>
-          <legend>Размер экрана в миллиметрах</legend>
-          <div class="sizes">
-            <label>Длина, мм
-              <input name="len" inputmode="numeric" autocomplete="off" aria-describedby="calc-min-note">
-            </label>
-            <label>Высота, мм
-              <input name="height" inputmode="numeric" autocomplete="off">
-            </label>
-            <label>Глубина, мм
-              <input name="depth" inputmode="numeric" autocomplete="off">
-            </label>
-          </div>
-          <p class="note" id="calc-min-note"></p>
-        </fieldset>
-      </div>
-      <div class="calc-result" aria-live="polite">
-        <p class="price-main" id="calc-price"></p>
-        <p class="price-sub" id="calc-price-sub"></p>
-        <p class="note">Все экраны изготавливаются под заказ</p>
-        <button class="btn calc-send" type="button" id="calc-send">Отправить расчёт</button>
-      </div>
-    </form>
   </div>
 </section>
 
@@ -162,42 +108,25 @@
 <section id="products">
   <div class="wrap">
     <h2>Изделия</h2>
-
-    <div class="panel" id="p-screens" role="tabpanel">
-      <h3>Экраны для батарей</h3>
-      <div class="tabs" role="tablist" aria-label="Материал">
-        <button class="tab" role="tab" aria-selected="true" data-mat="mdf">МДФ</button>
-        <button class="tab" role="tab" aria-selected="false" data-mat="wood">Массив дерева</button>
-        <button class="tab" role="tab" aria-selected="false" data-mat="metal">Металл</button>
-      </div>
-      <div class="panel-grid">
-        <div class="photos">
-          <div class="ph">Место для фото<br>экрана</div>
-          <div class="ph">Фото 2</div>
-          <div class="ph">Фото 3</div>
-        </div>
-        <div>
-          <div data-mat-text="mdf">
-            <h3>Экран из МДФ</h3>
-            <p>Закрывает батарею и украшает комнату. Подходит для квартир, домов и офисов.</p>
-            <ul class="facts"><li>Размер делаем под вашу батарею</li><li>Цвет и рисунок решётки согласуем</li></ul>
-          </div>
-          <div data-mat-text="wood" hidden>
-            <h3>Экран из массива дерева</h3>
-            <p>Натуральное дерево для интерьеров, где важен материал.</p>
-            <ul class="facts"><li>Размер делаем под вашу батарею</li><li>Породу и отделку согласуем</li></ul>
-          </div>
-          <div data-mat-text="metal" hidden>
-            <h3>Металлический экран</h3>
-            <p>Прочное решение для офисов, общественных и технических помещений.</p>
-            <ul class="facts"><li>Размер делаем под вашу батарею</li><li>Цвет покрытия согласуем</li></ul>
-          </div>
-          <button class="btn" data-ask="Экраны для батарей">Заказать экран</button>
-        </div>
-      </div>
+    <div class="tiles">
+      <a class="tile" href="ekrany.html">
+        <strong>Экраны для батарей</strong>
+        <span>Из МДФ, массива дерева и металла по размерам вашего радиатора. Отдельно — для садов и школ, спортзалов и бассейнов.</span>
+        <em>Выбрать экран →</em>
+      </a>
+      <a class="tile" href="dekor.html">
+        <strong>Декоративные изделия</strong>
+        <span>Медальницы, карты из дерева, адресные таблички, логотипы и вывески.</span>
+        <em>Смотреть декор →</em>
+      </a>
+      <a class="tile" href="nashi-raboty.html">
+        <strong>Наши работы</strong>
+        <span>Фото до и после: квартиры, офисы, сады и школы, спортзалы, бассейны.</span>
+        <em>Смотреть работы →</em>
+      </a>
     </div>
 
-    <div class="panel" id="p-baskets" role="tabpanel" hidden>
+    <div class="panel" id="p-baskets">
       <h3>Корзины для кондиционеров</h3>
       <div class="panel-grid">
         <div class="photos">
@@ -209,22 +138,6 @@
           <p>Металлическая корзина защищает наружный блок кондиционера и закрывает его от глаз.</p>
           <ul class="facts"><li>Из металла</li><li>Размер делаем под ваш блок</li></ul>
           <button class="btn" data-ask="Корзины для кондиционеров">Заказать корзину</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel" id="p-decor" role="tabpanel" hidden>
-      <h3>Декоративные изделия</h3>
-      <div class="panel-grid">
-        <div class="photos">
-          <div class="ph">Место для фото<br>изделия</div>
-          <div class="ph">Фото 2</div>
-          <div class="ph">Фото 3</div>
-        </div>
-        <div>
-          <p>Декоративные панели и элементы дизайна для интерьера. Список изделий скоро появится здесь.</p>
-          <p>Расскажите, что вам нужно, и мы подскажем, можем ли сделать.</p>
-          <button class="btn" data-ask="Декоративные изделия">Обсудить изделие</button>
         </div>
       </div>
     </div>
@@ -300,7 +213,6 @@
   </div>
 </footer>
 
-<script src="assets/calc.js"></script>
 <script src="assets/site.js"></script>
 </body>
 </html>
