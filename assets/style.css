@@ -156,7 +156,7 @@ header { background: var(--surface); border-bottom: 1px solid var(--line); }
 
 /* до / после */
 .ba-grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 16px; }
-.ba { margin: 0; display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+.ba { margin: 0; display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ba figcaption { grid-column: 1 / -1; font-size: .9rem; color: var(--muted); }
 .facts { padding-left: 1.1em; margin: 0 0 1em; color: var(--muted); }
 .facts li { margin-bottom: 4px; }
@@ -220,7 +220,7 @@ footer { padding: 24px 0 32px; color: var(--muted); font-size: .9rem; border-top
   .steps li { padding: 56px 14px 16px; }
   .gallery { grid-template-columns: repeat(4, 1fr); }
   .patterns { grid-template-columns: repeat(6, 1fr); }
-  .ba-grid { grid-template-columns: repeat(3, 1fr); }
+  .ba-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .foot { grid-template-columns: 1.2fr 1fr auto; }
 }
 
