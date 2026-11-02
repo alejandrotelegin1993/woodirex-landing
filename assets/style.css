@@ -162,6 +162,8 @@ header { background: var(--surface); border-bottom: 1px solid var(--line); }
 .contact-grid { display: grid; gap: 24px; grid-template-columns: 1fr; margin-top: 16px; }
 .contact-list { list-style: none; padding: 0; margin: 0 0 16px; }
 .contact-list li { margin-bottom: 8px; }
+.contact-ways a { display: inline-flex; align-items: center; gap: 8px; }
+.contact-ways svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
 form { display: grid; gap: 12px; }
 label { font-size: .9rem; font-weight: 600; display: grid; gap: 4px; }
 input, select, textarea {
