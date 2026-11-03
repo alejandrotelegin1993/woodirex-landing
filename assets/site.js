@@ -96,6 +96,43 @@
   if (reset) reset.addEventListener('click', show);
 })();
 
+// Галерея: фото целиком поверх страницы, листание стрелками. Без JS ссылка просто открывает фото.
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.gallery a'));
+  if (!links.length || !window.HTMLDialogElement) return;
+  var box = document.createElement('dialog');
+  box.className = 'lightbox';
+  box.innerHTML = '<img alt=""><button class="lb-close" type="button" aria-label="Закрыть">×</button>' +
+    '<button class="lb-prev" type="button" aria-label="Предыдущее фото">‹</button>' +
+    '<button class="lb-next" type="button" aria-label="Следующее фото">›</button>';
+  document.body.appendChild(box);
+  var img = box.querySelector('img');
+  var cur = 0;
+
+  function show(i) {
+    cur = (i + links.length) % links.length;
+    img.src = links[cur].href;
+    img.alt = links[cur].querySelector('img').alt;
+  }
+  links.forEach(function (a, i) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      show(i);
+      box.showModal();
+    });
+  });
+  box.querySelector('.lb-prev').addEventListener('click', function () { show(cur - 1); });
+  box.querySelector('.lb-next').addEventListener('click', function () { show(cur + 1); });
+  box.querySelector('.lb-close').addEventListener('click', function () { box.close(); });
+  // нажатие мимо фото и кнопок закрывает
+  box.addEventListener('click', function (e) { if (e.target === box) box.close(); });
+  box.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') show(cur - 1);
+    if (e.key === 'ArrowRight') show(cur + 1);
+  });
+  if (links.length < 2) box.querySelectorAll('.lb-prev, .lb-next').forEach(function (b) { b.hidden = true; });
+})();
+
 (function () {
   var form = document.getElementById('form');
   if (!form) return;
