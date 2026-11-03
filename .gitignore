@@ -1,3 +1,4 @@
 docs/*
 !docs/agents/
 !docs/adr/
+CLAUDE.local.md
